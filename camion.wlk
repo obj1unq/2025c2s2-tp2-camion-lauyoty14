@@ -1,5 +1,4 @@
 import cosas.*
-
 object camion {
 	const property cosas = #{}
 	const property tara = 1000
@@ -7,6 +6,37 @@ object camion {
 
 	method peso() {return tara + cosas.sum({cosa => cosa.peso()})}
 	method estaExcedido() {return self.peso() > pesoMaximo}
+
+	method trasportar(destino, camino){
+		destino.recibirCamionPorCamino(self, camino)
+	}
+
+	method sufreAccidente() {
+		cosas.forEach({cosa => cosa.accidente()})
+	}
+
+	method totalBultos() {
+		return cosas.sum({cosa => cosa.bultos()})
+	}
+
+	method pesoDeLasCosas() {
+		return cosas.map({cosa => cosa.peso()})
+	}
+
+	method cosaMasPesada() {
+		self.validarCosaMasPesada()
+		return cosas.max({cosa => cosa.peso()})
+	}
+
+	method validarCosaMasPesada() {
+		if(cosas.isEmpty()){
+			self.error("No hay ninguna cosa cargada")
+		}
+	}
+
+	method pesaEntreY(unPeso, otroPeso) {
+		return cosas.find({cosa => cosa.peso() >= unPeso and cosa.peso() <= otroPeso})
+	}
 	
 	method puedeCircularEnRuta(nivelPeligrosidad) {
 		return self.peso() <= pesoMaximo and self.cosasConMasPeligrosidadQue(nivelPeligrosidad).size() == 0
